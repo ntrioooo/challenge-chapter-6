@@ -3,6 +3,12 @@ const controllers = require("../app/controllers");
 
 const apiRouter = express.Router();
 
+// Open API
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./bloggingAPI.yaml');
+apiRouter.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 /**
  * Authentication Resource
  * */
@@ -14,7 +20,17 @@ apiRouter.get(
 apiRouter.post("/api/v1/login", controllers.api.v1.authController.login);
 apiRouter.post("/api/v1/register", controllers.api.v1.authController.register);
 
+apiRouter.get('/api/v1/cars', controllers.api.v1.carController.list);
+apiRouter.post('/api/v1/cars', controllers.api.v1.carController.create);
+apiRouter.put('/api/v1/cars/:id', controllers.api.v1.carController.update);
+apiRouter.get('/api/v1/cars/:id', controllers.api.v1.carController.show);
+apiRouter.delete(
+  '/api/v1/cars/:id',
+  controllers.api.v1.carController.destroy
+);
+
 apiRouter.use(controllers.api.main.onLost);
 apiRouter.use(controllers.api.main.onError);
+
 
 module.exports = apiRouter;
