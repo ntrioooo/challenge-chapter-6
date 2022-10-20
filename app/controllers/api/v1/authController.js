@@ -41,11 +41,13 @@ function createToken(payload) {
 module.exports = {
   async register(req, res) {
     const email = req.body.email;
+    // const role = req.body.role;
     const encryptedPassword = await encryptPassword(req.body.password);
-    const user = await User.create({ email, encryptedPassword });
+    const user = await User.create({ email, encryptedPassword, role });
     res.status(201).json({
       id: user.id,
       email: user.email,
+      // role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
@@ -96,20 +98,30 @@ module.exports = {
 
   async authorize(req, res, next) {
     try {
+      const users = await User.findOne({
+          where: { role: "member" }
+      });
+      console.log(users)
       const bearerToken = req.headers.authorization;
       const token = bearerToken.split("Bearer ")[1];
       const tokenPayload = jwt.verify(
-        token,
-        process.env.JWT_SIGNATURE_KEY || "Rahasia"
+          token,
+          process.env.JWT_SIGNATURE_KEY || "Rahasia"
       );
 
       req.user = await User.findByPk(tokenPayload.id);
+
+      if (users == "member") {
+          return res.status(401).json({
+              message: "Hanya untuk Super Admin dan Admin",
+          });
+      }
       next();
-    } catch (err) {
+  } catch (err) {
       console.error(err);
       res.status(401).json({
-        message: "Unauthorized",
+          message: "Unauthorized",
       });
-    }
+  }
   },
 };
