@@ -22,7 +22,14 @@ module.exports = {
 
     async create(req, res) {
         try {
-            const car = await carService.create(req.body);
+            console.log(req.user)
+            const car = await carService.create({
+                nama : req.body.nama,
+                harga : req.body.harga,
+                gambar : req.body.gambar,
+                size_id : req.body.size_id,
+                id_user : req.user.id
+            });
             res.status(200).json({
                 data: car
             }) 
@@ -36,7 +43,13 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const car = await carService.update(req.params.id, req.body);
+            const car = await carService.update(req.params.id, {
+                nama: req.body.nama,
+                harga : req.body.harga,
+                gambar : req.body.gambar,
+                size_id : req.body.size_id,
+                id_user : req.user.id
+            });
             res.status(200).json({
                 status: "Mobil Berhasil diperbaharui",
                 data: car,
