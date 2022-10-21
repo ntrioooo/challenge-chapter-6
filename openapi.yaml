@@ -1,0 +1,593 @@
+openapi: 3.0.0
+info:
+  title: Car Management API
+  version: 0.0.1
+servers:
+  - description: Mock Server
+    url: https://mock.medium.com
+  - description: "Staging Server"
+    url: https://staging.medium.com
+  - description: "Beta Server"
+    url: https://beta.medium.com
+  - description: "Production Server"
+    url: https://medium.com
+tags:
+  - name: Users
+    description: Contain every operation about Users Resource
+  - name: Cars
+    description: Contain every operation about Cars Resource
+    
+paths:
+  /api/v1/register:
+    post:
+      operationId: register
+      tags:
+      - Post
+      requestBody:
+        $ref: "#/components/requestBodies/RegisterRequest"
+      responses:
+        "201":
+          $ref: "#/components/responses/PostResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+          
+  /api/v1/login:
+    post:
+      operationId: Login
+      tags:
+      - Post
+      requestBody:
+        $ref: "#/components/requestBodies/LoginRequest"
+      responses:
+        "201":
+          $ref: "#/components/responses/PostResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+          
+  /api/v1/createCar:
+    post:
+      operationId: Create Car
+      tags:
+      - Post
+      requestBody:
+        $ref: "#/components/requestBodies/CreateCarRequest"
+      responses:
+        "201":
+          $ref: "#/components/responses/PostResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+          
+  /api/v1/user:
+    get:
+      operationId: Get user data
+      tags:
+      - get
+      responses:
+        "201":
+          $ref: "#/components/responses/GetUserResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+          
+  /api/v1/user/createuser:
+    post:
+      operationId: create user
+      tags:
+      - post
+      requestBody:
+        $ref: "#/components/requestBodies/CreateUserRequest"
+      responses:
+        "201":
+          $ref: "#/components/responses/CreateUserResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+          
+          
+  /api/v1/cars/{id}:
+    get:
+      operationId: getCarById
+      tags:
+        - Get
+      parameters:
+        - in: path
+          name: id
+          description: The id of the Car
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        "200":
+          $ref: "#/components/responses/GetCarResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+  
+        
+  /api/v1/cars/{id}/update:
+    put:
+      operationId: UpdateCars
+      tags:
+      - put
+      parameters:
+        - in: path
+          name: id
+          description: The id of the Car
+          required: true
+          schema:
+            type: number
+            example: 1
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateCarsRequest"      
+      responses:
+        "201":
+          $ref: "#/components/responses/UpdateCarsResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+  /api/v1/car/{id}/delete:
+    delete:
+      operationId: DeleteCars
+      tags:
+        - delete
+      parameters:
+        - in: path
+          name: id
+          description: The id of the Car
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        "200":
+          $ref: "#/components/responses/DeleteCarResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+  /api/v1/whoami:
+    get:
+      operationId: getData
+      tags:
+        - Get
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            format: jwt
+      responses:
+        "201":
+          $ref: "#/components/responses/GetCarResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+  
+  /api/v1/user/{id}:
+    put:
+      operationId: UpdateUser
+      tags:
+      - put
+      parameters:
+        - in: path
+          name: id
+          description: The id of the User
+          required: true
+          schema:
+            type: number
+            example: 1
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateUserRequest"      
+      responses:
+        "201":
+          $ref: "#/components/responses/UpdateUserResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+  
+  /api/v1/user/{id}/getuser:
+    get:
+      operationId: GetUser by id
+      tags:
+      - get
+      parameters:
+        - in: path
+          name: id
+          description: The id of the User
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        "201":
+          $ref: "#/components/responses/GetUserByIDResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+  
+  /api/v1/user/{id}/deleteUser:
+    delete:
+      operationId: DeleteUser
+      tags:
+        - delete
+      parameters:
+        - in: path
+          name: id
+          description: The id of the Car
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        "200":
+          $ref: "#/components/responses/DeleteUserByIdResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+          
+components:
+  requestBodies:
+    PostRequest:
+      description: Payload for making a Post
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: Industrial Society and It's Future
+              body:
+                type: string
+                example: |
+                  Lorem ipsum dolor sit amet,
+                  consectetur adipiscing elit.
+                  Nullam quis tristique dolor.
+                  Donec at vehicula urna. Fusce nec lacus placerat,
+                  dictum nulla quis, vehicula urna.
+                  Suspendisse dictum neque sapien,
+                  mollis semper quam tincidunt sit amet.
+                  Fusce ullamcorper, nisi id pharetra egestas,
+                  nisi libero ullamcorper mi,
+                  id consectetur enim arcu eget turpis.
+                  Fusce urna diam, elementum a diam non,
+                  efficitur tempus eros.
+                  Nam tincidunt orci vitae enim vulputate vehicula.
+                  Nullam commodo magna sed nulla efficitur,
+                  in gravida eros malesuada.
+                  Quisque vel turpis sed elit
+                  finibus luctus et sed leo.
+                  Etiam porta metus purus,
+                  in vulputate est accumsan a.
+                  Aenean pulvinar aliquam nunc,
+                  vel pharetra diam sodales in.
+    RegisterRequest:
+      description: Regis For User
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: admin@gmail.com
+              password:
+                type: string
+                example: admin123
+    LoginRequest:
+      description: Login For User
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: admin@gmail.com
+              password:
+                type: string
+                example: admin123
+    CreateCarRequest:
+      description: create cars
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: admin@gmail.com
+              password:
+                type: string
+                example: admin123
+    UpdateCarsRequest:
+      description: update cars
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "bdaf6814-2e99-40d5-9c15-e0238a90c886"
+              nama:
+                type: string
+                example: Industrial Society and It's Future
+              harga:
+                type: number
+                example: 200000
+              gambar:
+                type: string
+                example: car.png
+                
+    CreateUserRequest:
+      description: create user
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: admin@gmail.com
+              password:
+                type: string
+                example: admin123
+    
+    UpdateUserRequest:
+      description: update user
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: a@gmail.com
+              password:
+                type: string
+                example: admin
+              role:
+                type: string
+                example: member
+              
+            
+  responses:
+    ForbiddenResponse:
+      description: Response when accessing protected endpoint with access but sufficient access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: FAIL
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "FORBIDDEN"
+                  message:
+                    type: string
+                    example: "Invalid access level"
+    UnauthorizedResponse:
+      description: Response when accessing protected endpoint without access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: FAIL
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "UNAUTHORIZED"
+                  message:
+                    type: string
+                    example: "Access is not granted"
+    PostResponse:
+      description: Response when mutating and get individual Post.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/Post"
+    GetCarResponse:
+      description: Response when success get car by id.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/Car"
+    UpdateCarsResponse:
+      description: Response when success update car by id.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/Car"
+    DeleteCarResponse:
+      description: Response when success delete car by id.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/Car"
+                
+    GetUserResponse:
+      description: Response when success get user data.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/User"
+    
+    CreateUserResponse:
+      description: Response when success create user data.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/User"
+    
+    UpdateUserResponse:
+      description: Response when success update user by id.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/User"
+    
+    GetUserByIDResponse:
+      description: Response when success get user data by id
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/User"
+    
+    DeleteUserByIdResponse:
+      description: Response when success delete user by id.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/User"
+                
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "bdaf6814-2e99-40d5-9c15-e0238a90c886"
+        title:
+          type: string
+          example: Industrial Society and It's Future
+        body:
+          type: string
+          example: |
+            Lorem ipsum dolor sit amet,
+            consectetur adipiscing elit.
+            Nullam quis tristique dolor.
+            Donec at vehicula urna. Fusce nec lacus placerat,
+            dictum nulla quis, vehicula urna.
+            Suspendisse dictum neque sapien,
+            mollis semper quam tincidunt sit amet.
+            Fusce ullamcorper, nisi id pharetra egestas,
+            nisi libero ullamcorper mi,
+            id consectetur enim arcu eget turpis.
+            Fusce urna diam, elementum a diam non,
+            efficitur tempus eros.
+            Nam tincidunt orci vitae enim vulputate vehicula.
+            Nullam commodo magna sed nulla efficitur,
+            in gravida eros malesuada.
+            Quisque vel turpis sed elit
+            finibus luctus et sed leo.
+            Etiam porta metus purus,
+            in vulputate est accumsan a.
+            Aenean pulvinar aliquam nunc,
+            vel pharetra diam sodales in.
+        authorId:
+          type: string
+          example: "196508c4-495f-4d2e-898b-776fb3c1e8b4"
+        authorName:
+          type: string
+          example: "Ted Kaczynski"
+        authorAvatar:
+          type: string
+          example: "https://placekitten.com/200/200"
+        createdAt:
+          type: string
+          example: "2021-07-30 17:00:00 +0700"
+        updatedAt:
+          type: string
+          example: "2021-07-30 17:00:00 +0700"
+    Car:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "bdaf6814-2e99-40d5-9c15-e0238a90c886"
+        nama:
+          type: string
+          example: Industrial Society and It's Future
+        harga:
+          type: number
+          example: 200000
+        gambar:
+          type: string
+          example: car.png
+        createdAt:
+          type: string
+          example: "2021-07-30 17:00:00 +0700"
+        updatedAt:
+          type: string
+          example: "2021-07-30 17:00:00 +0700"
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          example: a@gmail.com
+        encryptedPassword:
+          type: string
+          example: admin
+        role:
+          type: string
+          example: member
